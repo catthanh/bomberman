@@ -32,7 +32,14 @@ public class Bomber extends Entity {
     }
 
     private void calculateCameraOffset() {
+        double xOffset = Camera.getxOffset();
+        if(x-Camera.getWIDTH()/2>0 && x+Camera.getWIDTH()/2<Game.WIDTH)
+        xOffset=x-Camera.getWIDTH()/2;
+        double yOffset = Camera.getyOffset();
+        if(y-Camera.getHEIGHT()/2>0 && y+Camera.getHEIGHT()/2<Game.HEIGHT)
+            yOffset=y-Camera.getHEIGHT()/2;
 
+        Camera.setOffset(xOffset,yOffset);
     }
 
     private void calculateMove(double s) {

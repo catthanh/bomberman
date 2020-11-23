@@ -11,11 +11,11 @@ public class Game extends Canvas {
     public static final int TILE_SIZE = 16,
     TILE_WIDTH = 20,
     TILE_HEIGHT = 15,
-    WIDTH = TILE_SIZE*TILE_WIDTH,
-    HEIGHT = TILE_SIZE*TILE_HEIGHT,
+    SCALE = 3,
+    WIDTH = TILE_SIZE*TILE_WIDTH*SCALE,
+    HEIGHT = TILE_SIZE*TILE_HEIGHT*SCALE,
     CAMERA_WIDTH = 16,
     CAMERA_HEIGHT = 13;
-    public static int SCALE = 3;
     public static final double PLAYER_SPEED = 1.0;
 
 
@@ -27,7 +27,7 @@ public class Game extends Canvas {
     public Game(double v, double v1) {
         super(v, v1);
         _gc = this.getGraphicsContext2D();
-        _camera=new Camera(CAMERA_WIDTH*SCALE,CAMERA_HEIGHT*SCALE,_gc);
+        _camera=new Camera(CAMERA_WIDTH*SCALE*TILE_SIZE,CAMERA_HEIGHT*SCALE*TILE_SIZE,_gc);
         _board=new Board(this);
     }
 

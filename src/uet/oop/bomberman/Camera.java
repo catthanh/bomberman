@@ -13,21 +13,27 @@ public class Camera {
         return xOffset;
     }
 
-    public static void setxOffset(int xOffset) {
-        Camera.xOffset = xOffset;
+    public static void setOffset(double xOffset, double yOffset) {
+        Camera.xOffset = (int)xOffset;
+        Camera.yOffset = (int) yOffset;
     }
 
     public static int getyOffset() {
         return yOffset;
     }
 
-    public static void setyOffset(int yOffset) {
-        Camera.yOffset = yOffset;
-    }
 
     private static int xOffset, yOffset;
 
-    private static  int WIDTH, HEIGHT;
+    public static int getWIDTH() {
+        return WIDTH;
+    }
+
+    public static int getHEIGHT() {
+        return HEIGHT;
+    }
+
+    private static int WIDTH, HEIGHT;
     Camera(int width, int height, GraphicsContext gc) {
         xOffset = 0;
         yOffset = 0;
