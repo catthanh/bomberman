@@ -1,11 +1,13 @@
 package uet.oop.bomberman.utilities;
 
 import uet.oop.bomberman.Game;
+import uet.oop.bomberman.graphics.Sprite;
 
-public class CoordinateConverter {
+public class Convert {
     public static int pixelToTile(double x) {
-        return  (int)x/(Game.TILE_SIZE*Game.SCALE);
+        return (int) (x) / (Sprite.SCALED_SIZE);
     }
+
     public double tileToPixel(double xTile, double yTile) {
         return 0;
     }

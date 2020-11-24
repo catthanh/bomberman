@@ -1,12 +1,11 @@
-package uet.oop.bomberman.entities.tile;
+package uet.oop.bomberman.entities.mob;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Entity;
 
-public class GrassTile extends Entity {
-
-    public GrassTile(int x, int y, Image img) {
-        super(x, y, img);
+public class Oneal extends Enemy {
+    public Oneal(int xUnit, int yUnit, Image img) {
+        super(xUnit, yUnit, img);
     }
 
     @Override
@@ -16,6 +15,6 @@ public class GrassTile extends Entity {
 
     @Override
     public boolean collide(Entity e) {
-        return true;
+        return false;
     }
 }

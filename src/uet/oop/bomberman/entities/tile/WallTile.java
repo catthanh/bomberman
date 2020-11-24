@@ -13,4 +13,9 @@ public class WallTile extends Entity {
     public void update(double s) {
 
     }
+
+    @Override
+    public boolean collide(Entity e) {
+        return false;
+    }
 }

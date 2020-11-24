@@ -30,4 +30,5 @@ public abstract class Entity {
         camera.drawImage(img, (int)x, (int)y);
     }
     public abstract void update(double s);
+    public abstract boolean collide(Entity e);
 }
