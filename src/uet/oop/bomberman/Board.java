@@ -4,6 +4,7 @@ import uet.oop.bomberman.entities.mob.Bomber;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.tile.GrassTile;
 import uet.oop.bomberman.entities.tile.WallTile;
+import uet.oop.bomberman.graphics.Camera;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.input.KeyPolling;
 
@@ -32,6 +33,7 @@ public class Board {
     }
 
     public void createMap() {
+        
         for (int j = 0; j < 15; j++) {
             for (int i = 0; i < 20; i++) {
                 Entity object;

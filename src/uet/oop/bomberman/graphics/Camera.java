@@ -1,10 +1,7 @@
-package uet.oop.bomberman;
+package uet.oop.bomberman.graphics;
 
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-
-import java.awt.*;
 
 public class Camera {
     GraphicsContext _gc;
@@ -14,7 +11,7 @@ public class Camera {
     }
 
     public static void setOffset(double xOffset, double yOffset) {
-        Camera.xOffset = (int)xOffset;
+        Camera.xOffset = (int) xOffset;
         Camera.yOffset = (int) yOffset;
     }
 
@@ -34,20 +31,22 @@ public class Camera {
     }
 
     private static int WIDTH, HEIGHT;
-    Camera(int width, int height, GraphicsContext gc) {
+
+    public Camera(int width, int height, GraphicsContext gc) {
         xOffset = 0;
         yOffset = 0;
         WIDTH = width;
         HEIGHT = height;
         _gc = gc;
     }
-    void render(){
+
+    void render() {
         //render map
         //render mob
     }
 
     public void drawImage(Image img, int x, int y) {
-        _gc.drawImage(img,x-xOffset,y-yOffset);
+        _gc.drawImage(img, x - xOffset, y - yOffset);
     }
 
     public void prepare() {

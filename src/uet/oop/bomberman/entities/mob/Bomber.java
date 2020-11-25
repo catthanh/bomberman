@@ -3,10 +3,9 @@ package uet.oop.bomberman.entities.mob;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import uet.oop.bomberman.Board;
-import uet.oop.bomberman.Camera;
+import uet.oop.bomberman.graphics.Camera;
 import uet.oop.bomberman.Game;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.tile.WallTile;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.input.KeyPolling;
 import uet.oop.bomberman.utilities.Convert;
@@ -16,6 +15,7 @@ public class Bomber extends Mob {
 
     Board _board;
     KeyPolling _input;
+    int _animate = 0;
 
 
     public Bomber(int x, int y, Image img, Board board) {
@@ -28,7 +28,47 @@ public class Bomber extends Mob {
     @Override
     public void update(double s) {
         calculateMove(s);
+        chooseSprite(s);
         calculateCameraOffset();
+    }
+
+    private void chooseSprite(double s) {
+        int m = 0;
+        _animate += s * 1000;
+        if (_animate > 10000) _animate = 0;
+        if (_animate % 400 < 200) m = 1;
+        else m = 2;
+        switch (_direction) {
+            case 0: {
+                if (_moving) {
+                    if (m == 1) img = Sprite.player_right_1.getFxImage();
+                    if (m == 2) img = Sprite.player_right_2.getFxImage();
+                } else img = Sprite.player_right.getFxImage();
+                break;
+            }
+            case 3: {
+                if (_moving) {
+                    if (m == 1) img = Sprite.player_up_1.getFxImage();
+                    if (m == 2) img = Sprite.player_up_2.getFxImage();
+                } else img = Sprite.player_up.getFxImage();
+                break;
+            }
+            case 2: {
+                if (_moving) {
+                    if (m == 1) img = Sprite.player_left_1.getFxImage();
+                    if (m == 2) img = Sprite.player_left_2.getFxImage();
+                } else img = Sprite.player_left.getFxImage();
+                break;
+            }
+            case 1: {
+                if (_moving) {
+                    if (m == 1) img = Sprite.player_down_1.getFxImage();
+                    if (m == 2) img = Sprite.player_down_2.getFxImage();
+                } else img = Sprite.player_down.getFxImage();
+                break;
+            }
+
+        }
     }
 
     @Override
@@ -54,26 +94,29 @@ public class Bomber extends Mob {
             if (_input.isDown(KeyCode.DOWN)) {
 
                 move(0, s * movementSpeed);
-            }
-            if (_input.isDown(KeyCode.UP)) {
+            } else if (_input.isDown(KeyCode.UP)) {
                 move(0, -s * movementSpeed);
-            }
-            if (_input.isDown(KeyCode.LEFT)) {
+            } else if (_input.isDown(KeyCode.LEFT)) {
                 move(-s * movementSpeed, 0);
-            }
-            if (_input.isDown(KeyCode.RIGHT)) {
+            } else if (_input.isDown(KeyCode.RIGHT)) {
                 move(s * movementSpeed, 0);
-            }
+            } else _moving = false;
         }
 
     }
 
     private void move(double xStep, double yStep) {
+        _moving = true;
+        if (xStep > 0) _direction = 0; //right
+        if (xStep < 0) _direction = 2; //left
+        if (yStep > 0) _direction = 1; //top
+        if (yStep < 0) _direction = 3; //bot
+
         double xx = x + xStep;
         double yy = y + yStep;
 
         double top = yy;
-        double bot = yy + Sprite.SCALED_SIZE;
+        double bot = yy + Sprite.SCALED_SIZE * 15 / 16;
         double left = xx;
         double right = xx + Sprite.SCALED_SIZE * 12 / 16;
         boolean movable =

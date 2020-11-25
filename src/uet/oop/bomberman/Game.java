@@ -2,6 +2,7 @@ package uet.oop.bomberman;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import uet.oop.bomberman.graphics.Camera;
 import uet.oop.bomberman.input.KeyPolling;
 import uet.oop.bomberman.utilities.GameLoopTimer;
 
@@ -9,26 +10,26 @@ public class Game extends Canvas {
 
     //size
     public static final int TILE_SIZE = 16,
-    TILE_WIDTH = 20,
-    TILE_HEIGHT = 15,
-    SCALE = 3,
-    PIXEL_WIDTH = TILE_SIZE*TILE_WIDTH*SCALE,
-    PIXEL_HEIGHT = TILE_SIZE*TILE_HEIGHT*SCALE,
-    CAMERA_WIDTH = 16,
-    CAMERA_HEIGHT = 13;
+            TILE_WIDTH = 20,
+            TILE_HEIGHT = 15,
+            SCALE = 3,
+            PIXEL_WIDTH = TILE_SIZE * TILE_WIDTH * SCALE,
+            PIXEL_HEIGHT = TILE_SIZE * TILE_HEIGHT * SCALE,
+            CAMERA_WIDTH = 16,
+            CAMERA_HEIGHT = 13;
     public static final double PLAYER_SPEED = 1.0;
 
 
     Board _board;
     Camera _camera;
     GraphicsContext _gc;
-    KeyPolling _input=KeyPolling.getInstance();
+    KeyPolling _input = KeyPolling.getInstance();
 
     public Game(double v, double v1) {
         super(v, v1);
         _gc = this.getGraphicsContext2D();
-        _camera=new Camera(CAMERA_WIDTH*SCALE*TILE_SIZE,CAMERA_HEIGHT*SCALE*TILE_SIZE,_gc);
-        _board=new Board(this);
+        _camera = new Camera(CAMERA_WIDTH * SCALE * TILE_SIZE, CAMERA_HEIGHT * SCALE * TILE_SIZE, _gc);
+        _board = new Board(this);
     }
 
     public void start() {
