@@ -130,7 +130,8 @@ public class Board {
     }
 
     public void addBomb(Bomb e) {
-        bombs.put(e.getArrayIndex(), e);
+        if (!bombs.containsKey(e.getArrayIndex()))
+            bombs.put(e.getArrayIndex(), e);
     }
 
     public Bomb getBomb(int xTile, int yTile) {

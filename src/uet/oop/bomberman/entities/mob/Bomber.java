@@ -38,7 +38,7 @@ public class Bomber extends Mob {
         if (_input.isDown(KeyCode.SPACE)) {
             int xt = Convert.pixelToTile(x + Sprite.SCALED_SIZE / 2);
             int yt = Convert.pixelToTile(y + Sprite.SCALED_SIZE / 2);
-            if (_board.getBomb(xt, yt) == null) {
+            {
                 Bomb e = new Bomb(xt, yt, this._board);
                 _board.addBomb(e);
             }
@@ -129,17 +129,80 @@ public class Bomber extends Mob {
         double yy = y + yStep;
 
         double top = yy;
-        double bot = yy + Sprite.SCALED_SIZE * 15 / 16;
+        double bot = yy + Sprite.SCALED_SIZE * 14.0 / 16.0;
         double left = xx;
-        double right = xx + Sprite.SCALED_SIZE * 12 / 16;
-        boolean movable =
+        double right = xx + Sprite.SCALED_SIZE * 12.0 / 16.0;
+        double centerX = (left + right) / 2.0;
+        double centerY = (top + bot) / 2.0;
+
+        if (xStep < 0) {
+            if (_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(top)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(centerY)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(bot)).collide(this)) {
+                y += xStep * 0.6;
+            }
+            if (_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(bot)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(centerY)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(top)).collide(this)) {
+                y -= xStep * 0.6;
+            }
+        }
+        if (xStep > 0) {
+            if (_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(top)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(centerY)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(bot)).collide(this)) {
+                y -= xStep * 0.6;
+            }
+            if (_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(bot)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(centerY)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(top)).collide(this)) {
+                y += xStep * 0.6;
+            }
+        }
+        if (yStep > 0) {
+            if (_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(bot)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(centerX), Convert.pixelToTile(bot)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(bot)).collide(this)) {
+                x += yStep * 0.6;
+            }
+            if (_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(bot)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(centerX), Convert.pixelToTile(bot)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(bot)).collide(this)) {
+                x -= yStep * 0.6;
+            }
+        }
+        if (yStep < 0) {
+            if (_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(top)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(centerX), Convert.pixelToTile(top)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(top)).collide(this)) {
+                x -= yStep * 0.6;
+            }
+            if (_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(top)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(centerX), Convert.pixelToTile(top)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(top)).collide(this)) {
+                x += yStep * 0.6;
+            }
+        }
+
+        if (movable(xx, yy)) {
+            x = xx;
+            y = yy;
+        }
+    }
+
+    public boolean movable(double xx, double yy) {
+
+        double top = yy;
+        double bot = yy + Sprite.SCALED_SIZE * 14.0 / 16.0;
+        double left = xx;
+        double right = xx + Sprite.SCALED_SIZE * 12.0 / 16.0;
+
+        return
                 _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(top)).collide(this) &&
                         _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(bot)).collide(this) &&
                         _board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(top)).collide(this) &&
                         _board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(bot)).collide(this);
-        if (movable) {
-            x = xx;
-            y = yy;
-        }
+
+
     }
 }
