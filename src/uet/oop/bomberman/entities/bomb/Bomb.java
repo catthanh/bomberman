@@ -56,7 +56,7 @@ public class Bomb extends Entity {
                     if (!e.collide(this)) break;
                 }
                 Bomb b = _board.getBomb(xt, yt - i);
-                
+
 
                 if (_board.getTilesAt(xt, yt - i) instanceof WallTile) break;
                 addFlame(xt, yt - i, 1, (i == radius - 1));
@@ -102,8 +102,8 @@ public class Bomb extends Entity {
     }
 
     private boolean addFlame(int xTile, int yTile, int direction, boolean last) {
-        int m = xTile + yTile * Game.TILE_WIDTH;
-        if (m < 0 || m >= Game.TILE_WIDTH * Game.TILE_HEIGHT) return false;
+        int m = xTile + yTile * Board.getTileWidth();
+        if (m < 0 || m >= Board.getTileWidth() * Board.getTileHeight()) return false;
 
         flames.add(new Flame(xTile, yTile, direction, last, this._board));
         return true;

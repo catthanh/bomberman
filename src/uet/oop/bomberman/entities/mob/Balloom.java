@@ -5,7 +5,7 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Balloom extends Enemy {
-    public Balloom(int xUnit, int yUnit, Image img) {
+    public Balloom(int xUnit, int yUnit) {
         super(xUnit, yUnit, Sprite.balloom_left1.getFxImage());
     }
 

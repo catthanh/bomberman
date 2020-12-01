@@ -5,7 +5,7 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Oneal extends Enemy {
-    public Oneal(int xUnit, int yUnit, Image img) {
+    public Oneal(int xUnit, int yUnit) {
         super(xUnit, yUnit, Sprite.oneal_right1.getFxImage());
     }
 

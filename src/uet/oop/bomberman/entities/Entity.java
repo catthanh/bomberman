@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.Board;
 import uet.oop.bomberman.Game;
 import uet.oop.bomberman.graphics.Camera;
 import uet.oop.bomberman.graphics.Sprite;
@@ -24,7 +25,7 @@ public abstract class Entity {
     }
 
     public int getArrayIndex() {
-        return getXTile() + getYTile() * Game.TILE_WIDTH;
+        return getXTile() + getYTile() * Board.getTileWidth();
     }
 
     //Tọa độ X tính từ góc trái trên trong Canvas

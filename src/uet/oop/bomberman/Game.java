@@ -6,15 +6,13 @@ import uet.oop.bomberman.graphics.Camera;
 import uet.oop.bomberman.input.KeyPolling;
 import uet.oop.bomberman.utilities.GameLoopTimer;
 
+import java.io.IOException;
+
 public class Game extends Canvas {
 
     //size
     public static final int TILE_SIZE = 16,
-            TILE_WIDTH = 20,
-            TILE_HEIGHT = 15,
             SCALE = 3,
-            PIXEL_WIDTH = TILE_SIZE * TILE_WIDTH * SCALE,
-            PIXEL_HEIGHT = TILE_SIZE * TILE_HEIGHT * SCALE,
             CAMERA_WIDTH = 16,
             CAMERA_HEIGHT = 13;
     public static final double PLAYER_SPEED = 1.0;

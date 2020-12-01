@@ -19,8 +19,8 @@ public class Bomber extends Mob {
     int _animate = 0;
 
 
-    public Bomber(int x, int y, Image _img, Board board) {
-        super(x, y, _img);
+    public Bomber(int x, int y, Board board) {
+        super(x, y, Sprite.player_right.getFxImage());
 
         _board = board;
         _input = _board.get_input();
@@ -91,10 +91,10 @@ public class Bomber extends Mob {
 
     private void calculateCameraOffset() {
         double xOffset = Camera.getxOffset();
-        if (x - Camera.getWIDTH() / 2.0 > 0 && x + Camera.getWIDTH() / 2.0 < Game.PIXEL_WIDTH)
+        if (x - Camera.getWIDTH() / 2.0 > 0 && x + Camera.getWIDTH() / 2.0 < Board.PIXEL_WIDTH)
             xOffset = x - Camera.getWIDTH() / 2.0;
         double yOffset = Camera.getyOffset();
-        if (y - Camera.getHEIGHT() / 2.0 > 0 && y + Camera.getHEIGHT() / 2.0 < Game.PIXEL_HEIGHT)
+        if (y - Camera.getHEIGHT() / 2.0 > 0 && y + Camera.getHEIGHT() / 2.0 < Board.PIXEL_HEIGHT)
             yOffset = y - Camera.getHEIGHT() / 2.0;
 
         Camera.setOffset(xOffset, yOffset);
