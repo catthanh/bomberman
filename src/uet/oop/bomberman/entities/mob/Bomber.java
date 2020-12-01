@@ -3,6 +3,7 @@ package uet.oop.bomberman.entities.mob;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import uet.oop.bomberman.Board;
+import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.graphics.Camera;
 import uet.oop.bomberman.Game;
 import uet.oop.bomberman.entities.Entity;
@@ -18,8 +19,8 @@ public class Bomber extends Mob {
     int _animate = 0;
 
 
-    public Bomber(int x, int y, Image img, Board board) {
-        super(x, y, img);
+    public Bomber(int x, int y, Image _img, Board board) {
+        super(x, y, _img);
 
         _board = board;
         _input = _board.get_input();
@@ -30,6 +31,18 @@ public class Bomber extends Mob {
         calculateMove(s);
         chooseSprite(s);
         calculateCameraOffset();
+        placeBomb();
+    }
+
+    private void placeBomb() {
+        if (_input.isDown(KeyCode.SPACE)) {
+            int xt = Convert.pixelToTile(x + Sprite.SCALED_SIZE / 2);
+            int yt = Convert.pixelToTile(y + Sprite.SCALED_SIZE / 2);
+            if (_board.getBomb(xt, yt) == null) {
+                Bomb e = new Bomb(xt, yt, this._board);
+                _board.addBomb(e);
+            }
+        }
     }
 
     private void chooseSprite(double s) {
@@ -41,30 +54,30 @@ public class Bomber extends Mob {
         switch (_direction) {
             case 0: {
                 if (_moving) {
-                    if (m == 1) img = Sprite.player_right_1.getFxImage();
-                    if (m == 2) img = Sprite.player_right_2.getFxImage();
-                } else img = Sprite.player_right.getFxImage();
+                    if (m == 1) _img = Sprite.player_right_1.getFxImage();
+                    if (m == 2) _img = Sprite.player_right_2.getFxImage();
+                } else _img = Sprite.player_right.getFxImage();
                 break;
             }
             case 3: {
                 if (_moving) {
-                    if (m == 1) img = Sprite.player_up_1.getFxImage();
-                    if (m == 2) img = Sprite.player_up_2.getFxImage();
-                } else img = Sprite.player_up.getFxImage();
+                    if (m == 1) _img = Sprite.player_up_1.getFxImage();
+                    if (m == 2) _img = Sprite.player_up_2.getFxImage();
+                } else _img = Sprite.player_up.getFxImage();
                 break;
             }
             case 2: {
                 if (_moving) {
-                    if (m == 1) img = Sprite.player_left_1.getFxImage();
-                    if (m == 2) img = Sprite.player_left_2.getFxImage();
-                } else img = Sprite.player_left.getFxImage();
+                    if (m == 1) _img = Sprite.player_left_1.getFxImage();
+                    if (m == 2) _img = Sprite.player_left_2.getFxImage();
+                } else _img = Sprite.player_left.getFxImage();
                 break;
             }
             case 1: {
                 if (_moving) {
-                    if (m == 1) img = Sprite.player_down_1.getFxImage();
-                    if (m == 2) img = Sprite.player_down_2.getFxImage();
-                } else img = Sprite.player_down.getFxImage();
+                    if (m == 1) _img = Sprite.player_down_1.getFxImage();
+                    if (m == 2) _img = Sprite.player_down_2.getFxImage();
+                } else _img = Sprite.player_down.getFxImage();
                 break;
             }
 

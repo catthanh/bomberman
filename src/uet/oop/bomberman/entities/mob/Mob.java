@@ -2,6 +2,7 @@ package uet.oop.bomberman.entities.mob;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.graphics.Sprite;
 
 public abstract class Mob extends Entity {
     protected int _direction = -1;
@@ -9,7 +10,9 @@ public abstract class Mob extends Entity {
     protected boolean _alive = true;
 
     public Mob(int xUnit, int yUnit, Image img) {
-        super(xUnit, yUnit, img);
+        x = xUnit * Sprite.SCALED_SIZE;
+        y = yUnit * Sprite.SCALED_SIZE;
+        _img = img;
     }
 
 

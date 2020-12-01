@@ -2,11 +2,13 @@ package uet.oop.bomberman.entities.tile;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.graphics.Sprite;
 
-public class GrassTile extends Entity {
+public class GrassTile extends Tile {
 
-    public GrassTile(int x, int y, Image img) {
-        super(x, y, img);
+    public GrassTile(int x, int y) {
+        super(x, y);
+        _img = Sprite.grass.getFxImage();
     }
 
     @Override
