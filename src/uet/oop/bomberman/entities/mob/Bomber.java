@@ -17,6 +17,7 @@ public class Bomber extends Mob {
     Board _board;
     KeyPolling _input;
     int _animate = 0;
+    Bomb currentBomb = null;
 
 
     public Bomber(int x, int y, Board board) {
@@ -32,6 +33,10 @@ public class Bomber extends Mob {
         chooseSprite(s);
         calculateCameraOffset();
         placeBomb();
+        if (currentBomb != null)
+            if (currentBomb.getArrayIndex() != getArrayIndex())
+                if (_board.getBomb(currentBomb.getXTile(), currentBomb.getYTile()) != null)
+                    _board.getBomb(currentBomb.getXTile(), currentBomb.getYTile()).pass();
     }
 
     private void placeBomb() {
@@ -39,8 +44,8 @@ public class Bomber extends Mob {
             int xt = Convert.pixelToTile(x + Sprite.SCALED_SIZE / 2);
             int yt = Convert.pixelToTile(y + Sprite.SCALED_SIZE / 2);
             {
-                Bomb e = new Bomb(xt, yt, this._board);
-                _board.addBomb(e);
+                currentBomb = new Bomb(xt, yt, this._board);
+                _board.addBomb(currentBomb);
             }
         }
     }

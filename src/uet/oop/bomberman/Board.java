@@ -1,6 +1,5 @@
 package uet.oop.bomberman;
 
-import javafx.geometry.Point2D;
 import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.bomb.Flame;
 import uet.oop.bomberman.entities.mob.Balloom;
@@ -12,7 +11,6 @@ import uet.oop.bomberman.entities.tile.GrassTile;
 import uet.oop.bomberman.entities.tile.LayeredTile;
 import uet.oop.bomberman.entities.tile.WallTile;
 import uet.oop.bomberman.graphics.Camera;
-import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.input.KeyPolling;
 
 import java.io.BufferedReader;
@@ -159,6 +157,8 @@ public class Board {
 
     public Entity getTilesAt(int XTile, int YTile) {
         if (XTile + YTile * Board.getTileWidth() < 0) return null;
+        if (bombs.containsKey(XTile + YTile * Board.getTileWidth()))
+            return bombs.get(XTile + YTile * Board.getTileWidth());
         return tiles.get(XTile + YTile * Board.getTileWidth());
     }
 
@@ -225,5 +225,12 @@ public class Board {
 
     public void clearFlames() {
         flames.clear();
+    }
+
+    public Entity getPlayer() {
+        for (Entity e : mobs) {
+            if (e instanceof Bomber) return e;
+        }
+        return mobs.get(0);
     }
 }

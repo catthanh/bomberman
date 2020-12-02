@@ -1,10 +1,8 @@
 package uet.oop.bomberman.entities.bomb;
 
-import javafx.scene.image.Image;
 import uet.oop.bomberman.Board;
-import uet.oop.bomberman.Game;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.tile.BrickTile;
+import uet.oop.bomberman.entities.mob.Bomber;
 import uet.oop.bomberman.entities.tile.LayeredTile;
 import uet.oop.bomberman.entities.tile.WallTile;
 import uet.oop.bomberman.graphics.Sprite;
@@ -20,6 +18,7 @@ public class Bomb extends Entity {
     private boolean exploded = false;
     int radius = 3;
     List<Flame> flames = new ArrayList<>();
+    boolean passed = false;
 
     public Bomb(int xUnit, int yUnit, Board board) {
 
@@ -33,20 +32,22 @@ public class Bomb extends Entity {
     @Override
     public void update(double s) {
         animate(s);
-        explode(s);
+        timeLeft -= s;
+        if (timeLeft < 0)
+            explode();
     }
 
     public void forceExplode() {
         exploded = true;
     }
 
-    private void explode(double s) {
-        timeLeft -= s;
-        if (timeLeft < 0) exploded = true;
-        int xt = Convert.pixelToTile(x);
-        int yt = Convert.pixelToTile(y);
+    private void explode() {
+        exploded = true;
+        int xt = getXTile();
+        int yt = getYTile();
         // create flame
-        if (exploded) {// center
+        if (exploded) {
+            // center
             addFlame(xt, yt, 4, true);
             //up
             for (int i = 1; i < radius; i++) {
@@ -56,8 +57,7 @@ public class Bomb extends Entity {
                     if (!e.collide(this)) break;
                 }
                 Bomb b = _board.getBomb(xt, yt - i);
-
-
+                if (b != null) break;
                 if (_board.getTilesAt(xt, yt - i) instanceof WallTile) break;
                 addFlame(xt, yt - i, 1, (i == radius - 1));
             }
@@ -127,8 +127,17 @@ public class Bomb extends Entity {
         if (m == 3) _img = Sprite.bomb_1.getFxImage();
     }
 
+    public void pass() {
+        passed = true;
+    }
+
+    public boolean isPassed() {
+        return passed;
+    }
+
     @Override
     public boolean collide(Entity e) {
+        if (e instanceof Bomber && !passed) return true;
         return false;
     }
 }
