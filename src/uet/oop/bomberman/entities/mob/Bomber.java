@@ -18,7 +18,33 @@ public class Bomber extends Mob {
     KeyPolling _input;
     int _animate = 0;
     Bomb currentBomb = null;
+    public static int bombNumber = 1;
+    public static int bomRadius = 1;
+    public static double speedLevel = 1.0;
 
+    public void increaseBombNumber() {
+        bombNumber++;
+    }
+
+    public void resetBombNumber() {
+        bombNumber++;
+    }
+
+    public int getBomRadius() {
+        return bomRadius;
+    }
+
+    public void setBomRadius(int bomRadius) {
+        Bomber.bomRadius = bomRadius;
+    }
+
+    public double getSpeedLevel() {
+        return speedLevel;
+    }
+
+    public void setSpeedLevel(double speedLevel) {
+        this.speedLevel = speedLevel;
+    }
 
     public Bomber(int x, int y, Board board) {
         super(x, y, Sprite.player_right.getFxImage());
@@ -34,18 +60,33 @@ public class Bomber extends Mob {
         calculateCameraOffset();
         placeBomb();
         if (currentBomb != null)
-            if (currentBomb.getArrayIndex() != getArrayIndex())
-                if (_board.getBomb(currentBomb.getXTile(), currentBomb.getYTile()) != null)
-                    _board.getBomb(currentBomb.getXTile(), currentBomb.getYTile()).pass();
+            if (passThroughCurrentBomb())
+                currentBomb.pass();
+    }
+
+    private boolean passThroughCurrentBomb() {
+        double top = y;
+        double bot = y + Sprite.SCALED_SIZE;
+        double left = x;
+        double right = x + Sprite.SCALED_SIZE * 12.0 / 16.0;
+
+        return
+                _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(top)) != currentBomb &&
+                        _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(bot)) != currentBomb &&
+                        _board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(top)) != currentBomb &&
+                        _board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(bot)) != currentBomb;
     }
 
     private void placeBomb() {
-        if (_input.isDown(KeyCode.SPACE)) {
-            int xt = Convert.pixelToTile(x + Sprite.SCALED_SIZE / 2);
-            int yt = Convert.pixelToTile(y + Sprite.SCALED_SIZE / 2);
+        if (_input.isDown(KeyCode.SPACE) && bombNumber > 0) {
+            int xt = Convert.pixelToTile(x + Sprite.SCALED_SIZE / 2.0 * 14.0 / 16.0);
+            int yt = Convert.pixelToTile(y + Sprite.SCALED_SIZE / 2.0);
             {
                 currentBomb = new Bomb(xt, yt, this._board);
-                _board.addBomb(currentBomb);
+                if (!_board.containsBomb(currentBomb)) {
+                    _board.addBomb(currentBomb);
+                    bombNumber--;
+                }
             }
         }
     }
@@ -106,7 +147,7 @@ public class Bomber extends Mob {
     }
 
     private void calculateMove(double s) {
-        double movementSpeed = Game.PLAYER_SPEED * Game.SCALE * Game.TILE_SIZE * 3;
+        double movementSpeed = (speedLevel + 2) * Sprite.SCALED_SIZE;
 
         {
             if (_input.isDown(KeyCode.DOWN)) {
@@ -136,7 +177,7 @@ public class Bomber extends Mob {
         double top = yy;
         double bot = yy + Sprite.SCALED_SIZE;
         double left = xx;
-        double right = xx + Sprite.SCALED_SIZE * 14.0 / 16.0;
+        double right = xx + Sprite.SCALED_SIZE * 12.0 / 16.0;
         double centerX = (left + right) / 2.0;
         double centerY = (top + bot) / 2.0;
 

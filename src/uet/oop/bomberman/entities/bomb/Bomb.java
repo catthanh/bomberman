@@ -16,7 +16,7 @@ public class Bomb extends Entity {
     double timeLeft = 2;
     Board _board;
     private boolean exploded = false;
-    int radius = 3;
+    int radius = 2;
     List<Flame> flames = new ArrayList<>();
     boolean passed = false;
 
@@ -26,7 +26,7 @@ public class Bomb extends Entity {
         y = yUnit * Sprite.SCALED_SIZE;
         _img = Sprite.bomb.getFxImage();
         _board = board;
-
+        radius = Bomber.bomRadius + 1;
     }
 
     @Override
@@ -98,6 +98,8 @@ public class Bomb extends Entity {
             }
 
             _board.addFlame(flames);
+            Bomber b = (Bomber) _board.getPlayer();
+            b.resetBombNumber();
         }
     }
 

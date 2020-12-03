@@ -6,10 +6,10 @@ import uet.oop.bomberman.entities.mob.Balloom;
 import uet.oop.bomberman.entities.mob.Bomber;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.mob.Oneal;
-import uet.oop.bomberman.entities.tile.BrickTile;
-import uet.oop.bomberman.entities.tile.GrassTile;
-import uet.oop.bomberman.entities.tile.LayeredTile;
-import uet.oop.bomberman.entities.tile.WallTile;
+import uet.oop.bomberman.entities.tile.*;
+import uet.oop.bomberman.entities.tile.item.BombItem;
+import uet.oop.bomberman.entities.tile.item.FlameItem;
+import uet.oop.bomberman.entities.tile.item.SpeedItem;
 import uet.oop.bomberman.graphics.Camera;
 import uet.oop.bomberman.input.KeyPolling;
 
@@ -137,6 +137,22 @@ public class Board {
                         tiles.add(new GrassTile(i, j));
                         break;
                     }
+                    case 'x': {
+                        tiles.add(new LayeredTile(i, j, new PortalTile(i, j), new BrickTile(i, j)));
+                        break;
+                    }
+                    case 'b': {
+                        tiles.add(new LayeredTile(i, j, new BombItem(i, j), new BrickTile(i, j)));
+                        break;
+                    }
+                    case 'f': {
+                        tiles.add(new LayeredTile(i, j, new FlameItem(i, j), new BrickTile(i, j)));
+                        break;
+                    }
+                    case 's': {
+                        tiles.add(new LayeredTile(i, j, new SpeedItem(i, j), new BrickTile(i, j)));
+                        break;
+                    }
                     default: {
                         tiles.add(new GrassTile(i, j));
                         break;
@@ -205,6 +221,10 @@ public class Board {
         bombs.forEach((g, v) -> v.render(camera));
         mobs.forEach(g -> g.render(camera));
         flames.forEach(g -> g.render(camera));
+    }
+
+    public boolean containsBomb(Bomb e) {
+        return bombs.containsKey(e.getArrayIndex());
     }
 
     public void addBomb(Bomb e) {

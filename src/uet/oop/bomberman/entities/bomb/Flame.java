@@ -10,7 +10,7 @@ import uet.oop.bomberman.utilities.Convert;
 public class Flame extends Mob {
     private boolean _last;
     private int _animate = 0;
-    private double _timeLeft = 1;
+    private double _timeLeft = 0.5;
     Board _board;
 
     /**
@@ -86,10 +86,10 @@ public class Flame extends Mob {
         int m = 0;// sprite order
         _animate += s * 1000;
         if (_animate > 10000) _animate = 0;
-        if (_animate % 800 < 200) m = 0;
-        else if (_animate % 800 < 400) m = 1;
-        else if (_animate % 800 < 600) m = 2;
-        else if (_animate % 800 < 800) m = 3;
+        if (_animate % 500 < 500 / 4) m = 0;
+        else if (_animate % 500 < 500 * 2 / 4) m = 1;
+        else if (_animate % 500 < 500 * 3 / 4) m = 2;
+        else if (_animate % 500 < 500) m = 3;
         if (m == 0) {
             if (_last)
                 switch (_direction) {

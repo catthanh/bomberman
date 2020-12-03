@@ -13,6 +13,7 @@ public abstract class Tile extends Entity {
     }
 
     public void destroy() {
+
     }
 
 
