@@ -1,16 +1,19 @@
-package uet.oop.bomberman.entities.mob;
+package uet.oop.bomberman.entities.mob.enemy;
 
-import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Balloom extends Enemy {
     public Balloom(int xUnit, int yUnit) {
-        super(xUnit, yUnit, Sprite.balloom_left1.getFxImage());
+        super(xUnit, yUnit, Sprite.balloom_left1.getFxImage(), Sprite.balloom_dead.getFxImage());
     }
 
     @Override
     public void update(double s) {
+
+    }
+
+    public void kill() {
 
     }
 

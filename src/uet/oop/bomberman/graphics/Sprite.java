@@ -251,7 +251,7 @@ public class Sprite {
         for (int x = 0; x < SIZE; x++) {
             for (int y = 0; y < SIZE; y++) {
                 if (_pixels[x + y * SIZE] == TRANSPARENT_COLOR) {
-                    pw.setArgb(x, y, 0);
+                    pw.setArgb(x, y, 16777215);
                 } else {
                     pw.setArgb(x, y, _pixels[x + y * SIZE]);
                 }

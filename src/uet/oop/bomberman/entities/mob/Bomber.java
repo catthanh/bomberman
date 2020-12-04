@@ -135,6 +135,11 @@ public class Bomber extends Mob {
         return true;
     }
 
+    @Override
+    public void kill() {
+
+    }
+
     private void calculateCameraOffset() {
         double xOffset = Camera.getxOffset();
         if (x - Camera.getWIDTH() / 2.0 > 0 && x + Camera.getWIDTH() / 2.0 < Board.PIXEL_WIDTH)
@@ -175,7 +180,7 @@ public class Bomber extends Mob {
         double yy = y + yStep;
 
         double top = yy;
-        double bot = yy + Sprite.SCALED_SIZE;
+        double bot = yy + Sprite.SCALED_SIZE * 15.0 / 16.0;
         double left = xx;
         double right = xx + Sprite.SCALED_SIZE * 12.0 / 16.0;
         double centerX = (left + right) / 2.0;
@@ -239,7 +244,7 @@ public class Bomber extends Mob {
     public boolean movable(double xx, double yy) {
 
         double top = yy;
-        double bot = yy + Sprite.SCALED_SIZE * 14.0 / 16.0;
+        double bot = yy + Sprite.SCALED_SIZE * 15.0 / 16.0;
         double left = xx;
         double right = xx + Sprite.SCALED_SIZE * 12.0 / 16.0;
 
@@ -251,4 +256,5 @@ public class Bomber extends Mob {
 
 
     }
+
 }

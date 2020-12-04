@@ -2,6 +2,7 @@ package uet.oop.bomberman.entities.tile;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.graphics.Camera;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class BrickTile extends Tile {
@@ -41,6 +42,12 @@ public class BrickTile extends Tile {
             }
         }
         if (timeLeft < 0) _destroyed = true;
+    }
+
+    @Override
+    public void render(Camera camera) {
+        if (destroying) camera.drawImage(Sprite.grass.getFxImage(), (int) x, (int) y);
+        super.render(camera);
     }
 
     @Override

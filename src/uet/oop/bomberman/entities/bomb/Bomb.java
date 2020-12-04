@@ -9,7 +9,9 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Convert;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Bomb extends Entity {
     int _animate = 0;
@@ -17,7 +19,7 @@ public class Bomb extends Entity {
     Board _board;
     private boolean exploded = false;
     int radius = 2;
-    List<Flame> flames = new ArrayList<>();
+    Map<Integer, Flame> flames = new HashMap<>();
     boolean passed = false;
 
     public Bomb(int xUnit, int yUnit, Board board) {
@@ -106,8 +108,8 @@ public class Bomb extends Entity {
     private boolean addFlame(int xTile, int yTile, int direction, boolean last) {
         int m = xTile + yTile * Board.getTileWidth();
         if (m < 0 || m >= Board.getTileWidth() * Board.getTileHeight()) return false;
-
-        flames.add(new Flame(xTile, yTile, direction, last, this._board));
+        Flame f = new Flame(xTile, yTile, direction, last, this._board);
+        flames.put(f.getArrayIndex(), f);
         return true;
     }
 

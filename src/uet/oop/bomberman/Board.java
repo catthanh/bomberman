@@ -2,10 +2,10 @@ package uet.oop.bomberman;
 
 import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.bomb.Flame;
-import uet.oop.bomberman.entities.mob.Balloom;
+import uet.oop.bomberman.entities.mob.enemy.Balloom;
 import uet.oop.bomberman.entities.mob.Bomber;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.mob.Oneal;
+import uet.oop.bomberman.entities.mob.enemy.Oneal;
 import uet.oop.bomberman.entities.tile.*;
 import uet.oop.bomberman.entities.tile.item.BombItem;
 import uet.oop.bomberman.entities.tile.item.FlameItem;
@@ -24,7 +24,7 @@ public class Board {
     List<Entity> tiles = new ArrayList<>();
     List<Entity> mobs = new ArrayList<>();
     Map<Integer, Bomb> bombs = new HashMap<>();
-    List<Entity> flames = new ArrayList<>();
+    Map<Integer, Flame> flames = new HashMap<>();
     Camera _camera;
     public static int TILE_SIZE = 16,
             TILE_WIDTH = 20,
@@ -180,11 +180,15 @@ public class Board {
 
     public void update(double secondsSinceLastFrame) {
         updateTiles(secondsSinceLastFrame);
+        updateMobs(secondsSinceLastFrame);
 
-        mobs.forEach(g -> g.update(secondsSinceLastFrame));
         updateBomb(secondsSinceLastFrame);
         updateFlames(secondsSinceLastFrame);
 
+    }
+
+    private void updateMobs(double secondsSinceLastFrame) {
+        mobs.forEach(g -> g.update(secondsSinceLastFrame));
     }
 
     private void updateTiles(double secondsSinceLastFrame) {
@@ -192,11 +196,12 @@ public class Board {
     }
 
     private void updateFlames(double s) {
-        Iterator<Entity> flamesIterator = flames.iterator();
+        Iterator<Map.Entry<Integer, Flame>> flamesIterator = flames.entrySet().iterator();
         while (flamesIterator.hasNext()) {
-            Flame f = (Flame) flamesIterator.next();
-            f.update(s);
-            if (f.getTimeLeft() < 0) {
+            Map.Entry f = flamesIterator.next();
+            Flame ff = (Flame) f.getValue();
+            ff.update(s);
+            if (ff.getTimeLeft() < 0) {
                 flamesIterator.remove();
             }
         }
@@ -220,7 +225,7 @@ public class Board {
         tiles.forEach(g -> g.render(camera));
         bombs.forEach((g, v) -> v.render(camera));
         mobs.forEach(g -> g.render(camera));
-        flames.forEach(g -> g.render(camera));
+        flames.forEach((g, v) -> v.render(camera));
     }
 
     public boolean containsBomb(Bomb e) {
@@ -239,8 +244,8 @@ public class Board {
         return null;
     }
 
-    public void addFlame(List<Flame> le) {
-        flames.addAll(le);
+    public void addFlame(Map<Integer, Flame> le) {
+        flames.putAll(le);
     }
 
     public void clearFlames() {

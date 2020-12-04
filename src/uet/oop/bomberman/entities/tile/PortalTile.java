@@ -18,7 +18,7 @@ public class PortalTile extends Tile {
 
     @Override
     public void render(Camera camera) {
-        camera.drawImage(Sprite.grass.getFxImage(), getXTile(), getYTile());
+        camera.drawImage(Sprite.grass.getFxImage(), (int) x, (int) y);
         super.render(camera);
     }
 

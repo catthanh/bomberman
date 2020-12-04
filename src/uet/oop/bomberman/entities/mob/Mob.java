@@ -18,4 +18,7 @@ public abstract class Mob extends Entity {
 
     @Override
     public abstract boolean collide(Entity e);
+
+    public abstract void kill();
+    
 }

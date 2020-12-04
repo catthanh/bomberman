@@ -7,11 +7,12 @@ import uet.oop.bomberman.entities.mob.Mob;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Convert;
 
-public class Flame extends Mob {
+public class Flame extends Entity {
     private boolean _last;
     private int _animate = 0;
     private double _timeLeft = 0.5;
     Board _board;
+    private int _direction;
 
     /**
      * @param xUnit
@@ -23,7 +24,9 @@ public class Flame extends Mob {
      *                  4 - center,
      */
     public Flame(int xUnit, int yUnit, int direction, boolean last, Board board) {
-        super(xUnit, yUnit, Sprite.bomb_exploded.getFxImage());
+        x = xUnit * Sprite.SCALED_SIZE;
+        y = yUnit * Sprite.SCALED_SIZE;
+
         _board = board;
         _last = last;
         _direction = direction;

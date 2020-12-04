@@ -1,12 +1,11 @@
-package uet.oop.bomberman.entities.mob;
+package uet.oop.bomberman.entities.mob.enemy;
 
-import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Oneal extends Enemy {
     public Oneal(int xUnit, int yUnit) {
-        super(xUnit, yUnit, Sprite.oneal_right1.getFxImage());
+        super(xUnit, yUnit, Sprite.oneal_right1.getFxImage(), Sprite.oneal_dead.getFxImage());
     }
 
     @Override
@@ -17,5 +16,10 @@ public class Oneal extends Enemy {
     @Override
     public boolean collide(Entity e) {
         return false;
+    }
+
+    @Override
+    public void kill() {
+        
     }
 }

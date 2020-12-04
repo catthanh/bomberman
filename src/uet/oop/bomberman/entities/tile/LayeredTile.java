@@ -2,6 +2,7 @@ package uet.oop.bomberman.entities.tile;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.graphics.Camera;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.LinkedList;
@@ -21,6 +22,11 @@ public class LayeredTile extends Tile {
         Tile t = _entities.getLast();
         if (t.isDestroyed()) _entities.removeLast();
         t.update(s);
+    }
+
+    @Override
+    public void render(Camera camera) {
+        _entities.getLast().render(camera);
     }
 
     @Override
