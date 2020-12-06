@@ -2,6 +2,7 @@ package uet.oop.bomberman;
 
 import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.bomb.Flame;
+import uet.oop.bomberman.entities.mob.Mob;
 import uet.oop.bomberman.entities.mob.enemy.Balloom;
 import uet.oop.bomberman.entities.mob.Bomber;
 import uet.oop.bomberman.entities.Entity;
@@ -23,9 +24,11 @@ public class Board {
     Game _game;
     List<Entity> tiles = new ArrayList<>();
     List<Entity> mobs = new ArrayList<>();
+    List<Bomber> bombers = new ArrayList<>();
     Map<Integer, Bomb> bombs = new HashMap<>();
     Map<Integer, Flame> flames = new HashMap<>();
     Camera _camera;
+    public static int level = 1;
     public static int TILE_SIZE = 16,
             TILE_WIDTH = 20,
             TILE_HEIGHT = 15,
@@ -58,34 +61,17 @@ public class Board {
 
     }
 
-    public void createMap() {
-        for (int j = 0; j < 15; j++) {
-            for (int i = 0; i < 20; i++) {
-                Entity object;
-
-                {
-                    object = new GrassTile(i, j);
-                }
-                tiles.add(object);
-            }
-        }
-        tiles.set(2 + 2 * Board.getTileWidth(), new WallTile(2, 2));
-        tiles.set(2 + 4 * Board.getTileWidth(), new WallTile(2, 4));
-        LayeredTile le = new LayeredTile(3, 5, new BrickTile(3, 5));
-        tiles.set(3 + 5 * Board.getTileWidth(), le);
-        for (int j = 0; j < 15; j++) {
-            for (int i = 0; i < 20; i++) {
-                if (getTilesAt(i, j) instanceof WallTile) {
-                    System.out.print("1 ");
-                } else {
-                    System.out.print("0 ");
-                }
-            }
-            System.out.println();
-        }
-    }
 
     public void loadMap(int level) {
+        tiles.clear();
+        mobs.clear();
+        bombers.clear();
+        bombs.clear();
+        flames.clear();
+        Bomber.bomRadius = 1;
+        Bomber.bombNumber = 1;
+        Bomber.speedLevel = 1.0;
+        Camera.reset();
         InputStream is = getClass().getClassLoader().getResourceAsStream("levels/Level" + level + ".txt");
         assert is != null;
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -95,7 +81,7 @@ public class Board {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        int _level = Integer.parseInt(st.nextToken());
+        level = Integer.parseInt(st.nextToken());
         TILE_HEIGHT = Integer.parseInt(st.nextToken());
         TILE_WIDTH = Integer.parseInt(st.nextToken());
         PIXEL_WIDTH = TILE_SIZE * TILE_WIDTH * SCALE;
@@ -123,17 +109,19 @@ public class Board {
                         break;
                     }
                     case 'p': {
-                        mobs.add(new Bomber(i, j, this));
+                        //mobs.add(new Bomber(i, j, this));
+                        bombers.add(new Bomber(i, j, this));
                         tiles.add(new GrassTile(i, j));
                         break;
                     }
                     case '1': {
-                        mobs.add(new Balloom(i, j));
+                        mobs.add(new Balloom(i, j, this
+                        ));
                         tiles.add(new GrassTile(i, j));
                         break;
                     }
                     case '2': {
-                        mobs.add(new Oneal(i, j));
+                        mobs.add(new Oneal(i, j, this));
                         tiles.add(new GrassTile(i, j));
                         break;
                     }
@@ -175,6 +163,8 @@ public class Board {
         if (XTile + YTile * Board.getTileWidth() < 0) return null;
         if (bombs.containsKey(XTile + YTile * Board.getTileWidth()))
             return bombs.get(XTile + YTile * Board.getTileWidth());
+        if (flames.containsKey(XTile + YTile * Board.getTileWidth()))
+            return flames.get(XTile + YTile * Board.getTileWidth());
         return tiles.get(XTile + YTile * Board.getTileWidth());
     }
 
@@ -188,18 +178,42 @@ public class Board {
     }
 
     private void updateMobs(double secondsSinceLastFrame) {
-        mobs.forEach(g -> g.update(secondsSinceLastFrame));
+        if (mobs.size() == 0) {
+            PortalTile.passable = true;
+            if (PortalTile.passed) levelUp();
+        }
+        if (!getPlayer().is_alive()) {
+            Bomber.trialLeft--;
+            loadMap(level);
+        }
+        bombers.forEach(g -> g.update(secondsSinceLastFrame));
+        Iterator<Entity> mobsIterator = mobs.listIterator();
+        while (mobsIterator.hasNext()) {
+            Mob m = (Mob) mobsIterator.next();
+            m.update(secondsSinceLastFrame);
+            if (!m.is_alive()) {
+                mobsIterator.remove();
+            }
+        }
+        //mobs.forEach(g -> g.update(secondsSinceLastFrame));
+    }
+
+    private void levelUp() {
+        loadMap(++level);
+        Game._phase = GamePhase.GAME_LEVEL_PRELOAD;
+        ScorePanel.timeLeft = 200;
     }
 
     private void updateTiles(double secondsSinceLastFrame) {
+
         tiles.forEach(g -> g.update(secondsSinceLastFrame));
     }
 
     private void updateFlames(double s) {
         Iterator<Map.Entry<Integer, Flame>> flamesIterator = flames.entrySet().iterator();
         while (flamesIterator.hasNext()) {
-            Map.Entry f = flamesIterator.next();
-            Flame ff = (Flame) f.getValue();
+            Map.Entry<Integer, Flame> f = flamesIterator.next();
+            Flame ff = f.getValue();
             ff.update(s);
             if (ff.getTimeLeft() < 0) {
                 flamesIterator.remove();
@@ -223,9 +237,10 @@ public class Board {
     public void render(Camera camera) {
         camera.prepare();
         tiles.forEach(g -> g.render(camera));
-        bombs.forEach((g, v) -> v.render(camera));
-        mobs.forEach(g -> g.render(camera));
         flames.forEach((g, v) -> v.render(camera));
+        mobs.forEach(g -> g.render(camera));
+        bombs.forEach((g, v) -> v.render(camera));
+        bombers.forEach(g -> g.render(camera));
     }
 
     public boolean containsBomb(Bomb e) {
@@ -244,18 +259,15 @@ public class Board {
         return null;
     }
 
-    public void addFlame(Map<Integer, Flame> le) {
-        flames.putAll(le);
+    public void addFlame(Map<Integer, Flame> me) {
+        flames.putAll(me);
     }
 
     public void clearFlames() {
         flames.clear();
     }
 
-    public Entity getPlayer() {
-        for (Entity e : mobs) {
-            if (e instanceof Bomber) return e;
-        }
-        return mobs.get(0);
+    public Bomber getPlayer() {
+        return bombers.get(0);
     }
 }

@@ -8,7 +8,7 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.input.KeyPolling;
 
 public class Launcher extends Application {
-    
+
     public static final int WIDTH = 20;
     public static final int HEIGHT = 15;
 
@@ -22,7 +22,7 @@ public class Launcher extends Application {
     @Override
     public void start(Stage stage) {
         // Tao Canvas
-        game = new Game(Sprite.SCALED_SIZE * Game.CAMERA_WIDTH, Sprite.SCALED_SIZE * Game.CAMERA_HEIGHT);
+        game = new Game(Sprite.SCALED_SIZE * Game.CAMERA_WIDTH, Sprite.SCALED_SIZE * (Game.CAMERA_HEIGHT + 2));
 
 
         // Tao root container

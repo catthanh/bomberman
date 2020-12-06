@@ -14,13 +14,14 @@ import uet.oop.bomberman.utilities.Convert;
 public class Bomber extends Mob {
 
 
-    Board _board;
     KeyPolling _input;
     int _animate = 0;
     Bomb currentBomb = null;
+    public static int trialLeft = 2;
     public static int bombNumber = 1;
     public static int bomRadius = 1;
     public static double speedLevel = 1.0;
+    double timeLeft = 1.0;
 
     public void increaseBombNumber() {
         bombNumber++;
@@ -47,9 +48,9 @@ public class Bomber extends Mob {
     }
 
     public Bomber(int x, int y, Board board) {
-        super(x, y, Sprite.player_right.getFxImage());
+        super(x, y, Sprite.player_right.getFxImage(), board);
 
-        _board = board;
+
         _input = _board.get_input();
     }
 
@@ -62,11 +63,15 @@ public class Bomber extends Mob {
         if (currentBomb != null)
             if (passThroughCurrentBomb())
                 currentBomb.pass();
+        if (_dying) {
+            timeLeft -= s;
+            if (timeLeft < 0) _alive = false;
+        }
     }
 
     private boolean passThroughCurrentBomb() {
         double top = y;
-        double bot = y + Sprite.SCALED_SIZE;
+        double bot = y + Sprite.SCALED_SIZE * 15 / 16.0;
         double left = x;
         double right = x + Sprite.SCALED_SIZE * 12.0 / 16.0;
 
@@ -78,7 +83,7 @@ public class Bomber extends Mob {
     }
 
     private void placeBomb() {
-        if (_input.isDown(KeyCode.SPACE) && bombNumber > 0) {
+        if (_input.isDown(KeyCode.SPACE) && bombNumber > 0 && !_dying) {
             int xt = Convert.pixelToTile(x + Sprite.SCALED_SIZE / 2.0 * 14.0 / 16.0);
             int yt = Convert.pixelToTile(y + Sprite.SCALED_SIZE / 2.0);
             {
@@ -128,16 +133,16 @@ public class Bomber extends Mob {
             }
 
         }
+        if (_dying) {
+            if (_animate % 900 < 300) _img = Sprite.player_dead1.getFxImage();
+            else if (_animate % 900 < 600) _img = Sprite.player_dead2.getFxImage();
+            else _img = Sprite.player_dead3.getFxImage();
+        }
     }
 
     @Override
     public boolean collide(Entity e) {
         return true;
-    }
-
-    @Override
-    public void kill() {
-
     }
 
     private void calculateCameraOffset() {
@@ -152,11 +157,11 @@ public class Bomber extends Mob {
     }
 
     private void calculateMove(double s) {
+        //bomcheck
+        movable(x, y);
         double movementSpeed = (speedLevel + 2) * Sprite.SCALED_SIZE;
-
-        {
+        if (!_dying) {
             if (_input.isDown(KeyCode.DOWN)) {
-
                 move(0, s * movementSpeed);
             } else if (_input.isDown(KeyCode.UP)) {
                 move(0, -s * movementSpeed);
@@ -239,22 +244,6 @@ public class Bomber extends Mob {
             x = xx;
             y = yy;
         }
-    }
-
-    public boolean movable(double xx, double yy) {
-
-        double top = yy;
-        double bot = yy + Sprite.SCALED_SIZE * 15.0 / 16.0;
-        double left = xx;
-        double right = xx + Sprite.SCALED_SIZE * 12.0 / 16.0;
-
-        return
-                _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(top)).collide(this) &&
-                        _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(bot)).collide(this) &&
-                        _board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(top)).collide(this) &&
-                        _board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(bot)).collide(this);
-
-
     }
 
 }

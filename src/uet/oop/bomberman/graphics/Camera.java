@@ -34,23 +34,24 @@ public class Camera {
 
     public Camera(int width, int height, GraphicsContext gc) {
         xOffset = 0;
-        yOffset = 0;
+        yOffset = -2 * Sprite.SCALED_SIZE;
         WIDTH = width;
         HEIGHT = height;
         _gc = gc;
     }
 
-    void render() {
-        //render map
-        //render mob
+    public static void reset() {
+        xOffset = 0;
+        yOffset = -2 * Sprite.SCALED_SIZE;
     }
+
 
     public void drawImage(Image img, int x, int y) {
         _gc.drawImage(img, x - xOffset, y - yOffset);
     }
 
     public void prepare() {
-        _gc.clearRect(0, 0, WIDTH, HEIGHT);
+        _gc.clearRect(0, 0, WIDTH, HEIGHT + 2 * Sprite.SCALED_SIZE);
 
     }
 
