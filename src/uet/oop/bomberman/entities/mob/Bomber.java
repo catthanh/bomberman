@@ -15,7 +15,6 @@ public class Bomber extends Mob {
 
 
     KeyPolling _input;
-    int _animate = 0;
     Bomb currentBomb = null;
     public static int trialLeft = 2;
     public static int bombNumber = 1;

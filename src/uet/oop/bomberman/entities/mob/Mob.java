@@ -12,6 +12,7 @@ public abstract class Mob extends Entity {
     protected boolean _alive = true;
     protected boolean _dying = false;
     protected Board _board;
+    protected int _animate = 0;
 
     public boolean is_alive() {
         return _alive;
@@ -30,6 +31,7 @@ public abstract class Mob extends Entity {
 
     public void kill() {
         _dying = true;
+        _animate = 0;
     }
 
     public boolean movable(double xx, double yy) {
@@ -44,7 +46,5 @@ public abstract class Mob extends Entity {
                         _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(bot)).collide(this) &&
                         _board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(top)).collide(this) &&
                         _board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(bot)).collide(this);
-
-
     }
 }
