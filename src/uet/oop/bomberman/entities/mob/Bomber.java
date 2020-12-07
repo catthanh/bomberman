@@ -72,7 +72,7 @@ public class Bomber extends Mob {
         double top = y;
         double bot = y + Sprite.SCALED_SIZE * 15 / 16.0;
         double left = x;
-        double right = x + Sprite.SCALED_SIZE * 12.0 / 16.0;
+        double right = x + Sprite.SCALED_SIZE * 13.0 / 16.0;
 
         return
                 _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(top)) != currentBomb &&
@@ -186,7 +186,7 @@ public class Bomber extends Mob {
         double top = yy;
         double bot = yy + Sprite.SCALED_SIZE * 15.0 / 16.0;
         double left = xx;
-        double right = xx + Sprite.SCALED_SIZE * 12.0 / 16.0;
+        double right = xx + Sprite.SCALED_SIZE * 13.0 / 16.0;
         double centerX = (left + right) / 2.0;
         double centerY = (top + bot) / 2.0;
 

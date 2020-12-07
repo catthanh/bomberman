@@ -13,6 +13,7 @@ public class Oneal extends Enemy {
         right1 = Sprite.oneal_right1.getFxImage();
         right2 = Sprite.oneal_right2.getFxImage();
         right3 = Sprite.oneal_right3.getFxImage();
+        chasingPlayer = true;
     }
 
     @Override

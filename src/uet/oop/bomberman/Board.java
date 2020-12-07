@@ -184,6 +184,11 @@ public class Board {
         }
         if (!getPlayer().is_alive()) {
             Bomber.trialLeft--;
+            if (Bomber.trialLeft < 0) {
+                Game._phase = GamePhase.GAME_OVER;
+                Bomber.trialLeft = 2;
+                ScorePanel.timeLeft = 200;
+            }
             loadMap(level);
         }
         bombers.forEach(g -> g.update(secondsSinceLastFrame));

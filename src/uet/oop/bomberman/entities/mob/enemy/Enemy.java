@@ -5,14 +5,16 @@ import uet.oop.bomberman.Board;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.mob.Bomber;
 import uet.oop.bomberman.entities.mob.Mob;
-import uet.oop.bomberman.entities.mob.enemy.movement.EnemyAI;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Convert;
 
 public abstract class Enemy extends Mob {
     Image _dead;
     double timeLeft = 2.0;
-    EnemyAI ai;
+    boolean chasingPlayer = false;
+    boolean randomDirection = true;
+    boolean randomSpeed = false;
+
     Image left1;
     Image left2;
     Image left3;
@@ -41,7 +43,7 @@ public abstract class Enemy extends Mob {
             timeLeft -= s;
             if (timeLeft < 0) _alive = false;
         }
-        calculateMove(s);
+        if (!_dying) calculateMove(s);
         movable(x, y);
         chooseSprite(s);
         Bomber b = _board.getPlayer();
@@ -54,19 +56,72 @@ public abstract class Enemy extends Mob {
     }
 
     private void calculateMove(double s) {
+        Bomber _player = _board.getPlayer();
+        Enemy _e = this;
         int xa = 0, ya = 0;
-        if (_steps <= 0) {
-            _direction = getRandom(0, 3);
-            _steps = MAX_STEPS;
+        if (chasingPlayer) {
+            {
+                if (_player == null)
+                    _direction = getRandom(0, 3);
+
+                int vertical = getRandom(1, 2);
+
+                if (vertical == 1) {
+                    int v;
+                    {
+                        if (_player.getXTile() < _e.getXTile())
+                            v = 2;
+                        else if (_player.getXTile() > _e.getXTile())
+                            v = 0;
+                        else
+                            v = -1;
+                    }
+                    if (v != -1)
+                        _direction = v;
+                    else {
+                        if (_player.getYTile() < _e.getYTile())
+                            _direction = 1;
+                        else if (_player.getYTile() > _e.getYTile())
+                            _direction = 3;
+                        else
+                            _direction = -1;
+                    }
+
+                } else {
+                    int h;
+
+                    if (_player.getYTile() < _e.getYTile())
+                        h = 1;
+                    else if (_player.getYTile() > _e.getYTile())
+                        h = 3;
+                    else
+                        h = -1;
+                    if (h != -1)
+                        _direction = h;
+                    else {
+                        if (_player.getXTile() < _e.getXTile())
+                            _direction = 2;
+                        else if (_player.getXTile() > _e.getXTile())
+                            _direction = 0;
+                        else
+                            _direction = -1;
+                    }
+                }
+            }
+
+        } else {
+            if (_steps <= 0) {
+                _direction = getRandom(0, 3);
+                _steps = MAX_STEPS;
+            }
         }
 
         if (_direction == 0) xa++;
         if (_direction == 2) xa--;
         if (_direction == 3) ya++;
         if (_direction == 1) ya--;
-        System.out.println(xa);
-        System.out.println(ya);
-        System.out.println(movable(x + xa, y + ya));
+
+
         if (movable(x + xa * movementSpeed * s, y + ya * movementSpeed * s)) {
             _steps -= 0.1 + rest;
             move(xa * movementSpeed * s, ya * movementSpeed * s);
@@ -75,20 +130,89 @@ public abstract class Enemy extends Mob {
             _steps = 0;
             _moving = false;
         }
+
+
     }
 
     private void move(double xStep, double yStep) {
+
         x += xStep;
         y += yStep;
 
     }
 
-    @Override
-    public boolean movable(double xx, double yy) {
+    public boolean canMove(double xx, double yy) {
         double top = yy;
         double bot = yy + Sprite.SCALED_SIZE * 15.0 / 16.0;
         double left = xx;
         double right = xx + Sprite.SCALED_SIZE * 15.0 / 16.0;
+        return
+                _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(top)).collide(this) &&
+                        _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(bot)).collide(this) &&
+                        _board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(top)).collide(this) &&
+                        _board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(bot)).collide(this);
+    }
+
+    @Override
+    public boolean movable(double xx, double yy) {
+        double xStep = xx - x;
+
+        double yStep = yy - y;
+        double top = yy;
+        double bot = yy + Sprite.SCALED_SIZE * 15.0 / 16.0;
+        double left = xx;
+        double right = xx + Sprite.SCALED_SIZE * 15.0 / 16.0;
+        double centerX = (left + right) / 2.0;
+        double centerY = (top + bot) / 2.0;
+
+        if (xStep < 0) {
+            if (_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(top)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(centerY)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(bot)).collide(this)) {
+                y += xStep * 0.6;
+            }
+            if (_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(bot)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(centerY)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(top)).collide(this)) {
+                y -= xStep * 0.6;
+            }
+        }
+        if (xStep > 0) {
+            if (_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(top)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(centerY)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(bot)).collide(this)) {
+                y -= xStep * 0.6;
+            }
+            if (_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(bot)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(centerY)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(top)).collide(this)) {
+                y += xStep * 0.6;
+            }
+        }
+        if (yStep > 0) {
+            if (_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(bot)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(centerX), Convert.pixelToTile(bot)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(bot)).collide(this)) {
+                x += yStep * 0.6;
+            }
+            if (_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(bot)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(centerX), Convert.pixelToTile(bot)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(bot)).collide(this)) {
+                x -= yStep * 0.6;
+            }
+        }
+        if (yStep < 0) {
+            if (_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(top)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(centerX), Convert.pixelToTile(top)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(top)).collide(this)) {
+                x -= yStep * 0.6;
+            }
+            if (_board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(top)).collide(this) &&
+                    _board.getTilesAt(Convert.pixelToTile(centerX), Convert.pixelToTile(top)).collide(this) &&
+                    !_board.getTilesAt(Convert.pixelToTile(right), Convert.pixelToTile(top)).collide(this)) {
+                x += yStep * 0.6;
+            }
+        }
 
         return
                 _board.getTilesAt(Convert.pixelToTile(left), Convert.pixelToTile(top)).collide(this) &&
